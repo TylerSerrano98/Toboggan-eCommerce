@@ -48,15 +48,15 @@ namespace eCommerceStarterCode.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7961739a-1f19-4697-bf84-4fc62a8a6ff2",
-                            ConcurrencyStamp = "85cfa9da-034d-4b8c-ac0c-f7576aeb3b38",
+                            Id = "c073f42c-79e8-41a6-a5d7-0ed41ae7aca0",
+                            ConcurrencyStamp = "df8961da-91f7-4729-a4aa-312b6fcd7c8f",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "64135ac6-c82d-4330-8b37-d720b8cecc17",
-                            ConcurrencyStamp = "8485d656-2456-43e5-8ca0-0ca2b086d47a",
+                            Id = "a85197de-2346-492e-861e-08b0370b485f",
+                            ConcurrencyStamp = "27e54b6b-7578-4229-8a3e-7a5a5651df3",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -237,8 +237,10 @@ namespace eCommerceStarterCode.Migrations
 
             modelBuilder.Entity("eCommerceStarterCode.Models.ShoppingCart", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -249,9 +251,14 @@ namespace eCommerceStarterCode.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ShoppingCart");
                 });
@@ -414,7 +421,13 @@ namespace eCommerceStarterCode.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("eCommerceStarterCode.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Product");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
