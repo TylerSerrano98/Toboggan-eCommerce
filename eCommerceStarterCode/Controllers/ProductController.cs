@@ -42,7 +42,10 @@ namespace eCommerceStarterCode.Controllers
         [HttpGet("searchresults/{searchTerm}")]
         public IActionResult getSearchResults(string searchTerm)
         {
-            var product = _context.Products.Include(p => p.Category).ToList().Where(p => p.ProductName.ToLower().Contains(searchTerm.ToLower()));
+            var product = _context.Products.Include(p => p.Category)
+                .Where(p => p.ProductName.ToLower()
+                .Contains(searchTerm.ToLower()))
+                .ToList();
             return Ok(product);
 
         }
