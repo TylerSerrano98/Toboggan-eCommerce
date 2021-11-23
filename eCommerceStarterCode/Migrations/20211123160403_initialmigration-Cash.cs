@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace eCommerceStarterCode.Migrations
 {
-    public partial class nevin : Migration
+    public partial class initialmigrationCash : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

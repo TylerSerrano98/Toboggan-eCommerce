@@ -10,8 +10,8 @@ using eCommerceStarterCode.Data;
 namespace eCommerceStarterCode.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211122225058_nevin")]
-    partial class nevin
+    [Migration("20211123160403_initialmigration-Cash")]
+    partial class initialmigrationCash
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -25,7 +25,11 @@ namespace eCommerceStarterCode.Controllers
         public IActionResult Get(string UserId)
         {
             var shoppingCart = _context.ShoppingCart;
-            var specificCart = shoppingCart.Include(sc => sc.Product).Include(sc => sc.Product.Category).ToList().Where(sc => sc.UserId == UserId);
+            var specificCart = shoppingCart
+                .Where(sc => sc.UserId == UserId)
+                .Include(sc => sc.Product)
+                .Include(sc => sc.Product.Category)
+                .ToList();
             return Ok(specificCart);
                  
         }
