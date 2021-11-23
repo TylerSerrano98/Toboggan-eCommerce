@@ -1,23 +1,25 @@
 ﻿using eCommerceStarterCode.Data;
 using eCommerceStarterCode.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace eCommerceStarterCode.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ShoppingCartsController : ControllerBase
+    public class ShoppingCartController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
        
 
-        public ShoppingCartsController(ApplicationDbContext context)
+        public ShoppingCartController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -34,7 +36,7 @@ namespace eCommerceStarterCode.Controllers
                  
         }
         
-        [HttpPost("Add")]
+        [HttpPost]
         public IActionResult Post([FromBody] ShoppingCart value)
         {
             _context.ShoppingCart.Add(value);
@@ -42,18 +44,23 @@ namespace eCommerceStarterCode.Controllers
             return StatusCode(201, value);
         }
 
-        [HttpDelete("{productId} / {userId}")]
-        public IActionResult Remove(int productId, string UserId)
+        [HttpDelete("{productId}")]
+        public IActionResult Delete(int productId)
         {
-            var deleteProduct = _context.ShoppingCart.Where(dp => dp.UserId == UserId && dp.ProductId == productId).SingleOrDefault();
-            if (deleteProduct == null) 
-            {
-                return NotFound();
-
+            var userId = User.FindFirstValue("id");
+            var user = _context.Users.Find(userId);
+            if (user == null)
+            { 
+                return NotFound("User not found");
             }
+
+            var deleteProduct = _context.ShoppingCart
+                .Where(dp => dp.UserId == userId && dp.ProductId == productId)
+                .SingleOrDefault();
+
             _context.ShoppingCart.Remove(deleteProduct);
             _context.SaveChanges();
-            return Ok(deleteProduct);
+            return StatusCode(204, deleteProduct);
         }
 
 
