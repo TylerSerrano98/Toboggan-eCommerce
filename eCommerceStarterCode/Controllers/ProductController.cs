@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace eCommerceStarterCode.Controllers
 {
-    [Route("api/product")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -58,7 +58,7 @@ namespace eCommerceStarterCode.Controllers
 
         }
 
-        [HttpGet("{productId}details")]
+        [HttpGet("{productId}/details")]
         public IActionResult GetProductDetailsOnly(int productId)
         {
             var productOnly = _context.Products.Where(p => p.ProductId == productId);
