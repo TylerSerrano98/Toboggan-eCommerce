@@ -40,7 +40,7 @@ namespace eCommerceStarterCode.Controllers
         }
 
         [HttpGet("categoryresults")]
-        public IActionResult getAllCategories(int categoryId)
+        public IActionResult getAllCategoriesResults(int categoryId)
         {
             var categories = _context.Categories
                 .Where(p => p.CategoryId == categoryId);
@@ -56,23 +56,27 @@ namespace eCommerceStarterCode.Controllers
                                             CategoryId = c.CategoryId,
                                             CategoryName = c.CategoryName
                                         };
-            return Ok(categories);
+            return Ok(categoriesWithProduct);
 
         }
 
-        [HttpGet("{productID}")]
-        public IActionResult GetCategoryDetails(int productId)
+        [HttpGet("searchresults/{searchTerm}")]
+        public IActionResult getSearchResults(string searchTerm)
         {
-            var product = _context.Products.Include(p => p.Category).Where(p => p.ProductId == productId);
-            return Ok(product);
-
-        }
-
-        [HttpGet("{productId}details")]
-        public IActionResult GetProductDetailsOnly(int productId)
-        {
-            var productOnly = _context.Products.Where(p => p.ProductId == productId);
-            return Ok(productOnly);
+            var category = _context.Categories.Where(p => p.CategoryName.ToLower().Contains(searchTerm.ToLower()));
+            var productAndCategory = from cId in category
+                                     join pcId in _context.Products
+                                     on cId.CategoryId equals pcId.CategoryId
+                                     select new
+                                     {
+                                         ProductId = pcId.ProductId,
+                                         ProductName = pcId.ProductName,
+                                         ProductPrice = pcId.ProductPrice,
+                                         ProductDescription = pcId.ProductDescription,
+                                         CategoryId = cId.CategoryId,
+                                         CategoryName = cId.CategoryName
+                                     };
+            return Ok(productAndCategory);
 
         }
 
